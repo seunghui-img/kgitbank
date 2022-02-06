@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block con %}
+
+<div class="container mt-5" style="width:80%">
+
+    <h1><b>게시판</b></h1>
+
+    <div class="text-end">
+        <a href="{% url 'board:create' %}" class="btn btn-dark">글쓰기</a>
+    </div>
+
+    <table class="table mt-3 table-hover">
+        <thead class="text-center" style="background-color: black; color:white; font-weight: bold; font-size: 18px;">
+            <tr>
+                <th scope="col">NO</th>
+                <th scope="col">SUBJECT</th>
+                <th scope="col">SUMMARY</th>
+                <th scope="col">WRITER</th>
+                <th scope="col">LIKEY</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in boardList %}
+            <tr>
+                <th scope="row">{{ boardList.start_index|add:forloop.counter0 }}</th>
+                <td><a class="sub" href="{% url 'board:detail' i.id %}">{{i.subject}}</a></td>
+                <td>{{i.getSummary}}</td>
+                <td>{{i.writer}}</td>
+                <td>{{i.likey.count}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <!-- Pagiation -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {% if boardList.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'board:index' %}?page=1&cate={{cate}}&key={{key}}" aria-label="First Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'board:index' %}?page={{boardList.previous_page_number}}&cate={{cate}}&key={{key}}" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="First Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+
+
+            <!-- 페이지 버튼 노출 제어 -->
+            {% for i in boardList.paginator.page_range %}
+                {% if i >= boardList.number|add:-3 and i <= boardList.number|add:3 %}
+                    <li class="page-item {% if i == boardList.number %} active {% endif %}">
+                        <a class="page-link" href="{% url 'board:index' %}?page={{i}}&cate={{cate}}&key={{key}}">{{i}}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+
+            {% if boardList.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'board:index' %}?page={{boardList.next_page_number}}&cate={{cate}}&key={{key}}" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'board:index' %}?page={{boardList.paginator.num_pages}}&cate={{cate}}&key={{key}}" aria-label="Final Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                    </a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Final Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+            
+        </ul>
+    </nav>
+
+
+    <form>
+        <div class="row mt-5 mb-5">
+            <div class="col-lg-2">
+                <select name="cate" class="form-select" aria-label="Default select example">
+                    <option value="subject" {% if cate == 'subject' %} selected {% endif %}>제목</option>
+                    <option value="writer" {% if cate == 'writer' %} selected {% endif %}>글쓴이</option>
+                    <option value="content" {% if cate == 'content' %} selected {% endif %}>내용</option>
+                </select>
+            </div>
+            <div class="col-lg-9">
+                <input name="key" value="{{key}}" type="text" class="form-control">
+            </div>
+            <div class="col-lg-1">
+                <button class="btn btn-dark">검색</button>
+            </div>
+        </div>
+    </form>
+
+
+    <style>
+        .sub {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+        }
+        .sub:hover {
+            color: red;
+        }
+    </style>
+
+</div>
+
+{% endblock %}

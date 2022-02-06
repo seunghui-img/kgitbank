@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block anycon %}
+<div class="container mt-5 mb-5">
+    <h1>회원가입</h1>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3 mt-4">
+            <label for="exampleInputEmail1" class="form-label">Username</label>
+            <input name="username" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input name="password" type="password" class="form-control" id="exampleInputPassword1">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Age</label>
+            <input name="age" type="number" class="form-control" id="exampleInputPassword1">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Comment</label>
+            <textarea name="comment" class="form-control"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">UserImage</label>
+            <input name="pic" type="file" class="form-control" id="exampleInputPassword1">
+        </div>
+
+        <div class="mt-4 text-end">
+            <button type="button" class="btn btn-success" onclick="inputcheck()">회원가입</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+
+<script>
+    function inputcheck(){
+        pForm = document.updateForm;
+        
+        if(!pForm.username.value){
+            this.alert('아이디를 입력하세요')
+            pForm.username.focus()
+        } else if(!pForm.password.value){
+            this.alert('비밀번호를 입력하세요')
+            pForm.password.focus()
+        } else if(!pForm.age.value){
+            this.alert('나이를 입력하세요')
+            pForm.age.focus()
+        } else{
+            pForm.submit()
+        }
+    }
+</script>
